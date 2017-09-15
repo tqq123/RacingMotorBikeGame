@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script type="text/javascript" src="js/jquery-3.1.0.min.js" ></script>
+		<script src="js/MyActor.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/myrocker3.js"></script>
+		<script src="js/Mymap.js"></script>
+		<script src="js/director.js"></script>
+		<script src="js/bgm.js"></script>
+		<script src="js/result.js"></script>
+		<script src="js/gold.js"></script>
+		<script src="../js/Menu.js"></script>
+		<script src="js/userdata.js"></script>
+		<link rel="stylesheet" href="css/rota.css"/>
+		<script type="text/javascript">
+			$(function () {
+				//导演切换
+				function myf(swi){//login  home // trigger bind
+					var result= new gameresult(myf);
+					dir1.runScene(result.$mainBody);
+					var bgm1=new bgm($("body"));
+				}
+				var dir1= new director($("body"));
+				var result= new gameresult(myf);
+
+
+				var timer;
+
+				localStorage.time=undefined;
+				localStorage.time1=undefined;
+				localStorage.time2=undefined;
+				//摇杆
+				var player = new MyActor($("#actor"),[localStorage.player,localStorage.motor,localStorage.wheel],40,-144);
+				var player1 = new MyActor($("#actor1"),['img/Biker01.png','img/BikerBody02.png','img/BikerExtraParts1.png'],165,25,165,24);
+				var player2 = new MyActor($("#actor2"),['img/Biker05-1.png','img/BikerBody01.png','img/BikerExtraParts1.png'],195,90,195,88);
+				var player1_1 = new MyActor($("#actor3"),['img/Biker06-1.png','img/BikerBody02.png','img/BikerExtraParts2.png'],165,25,165,24);
+				var player2_1 = new MyActor($("#actor4"),['img/Biker05-1.png','img/BikerBody01.png','img/BikerExtraParts1.png'],195,90,195,88);
+				var obj = new myRocker($("#mydiv"));
+				var Mymap=new mymap($("body"),0);
+				var k=0;  //金币数
+
+
+				//玩家
+				obj.myfu("mydefine",function(e,nx,ny){
+					if(nx>=0&&pause==0){
+						//速度
+						Mymap.$speed1.css({
+							'width':nx*195/45+'px'
+						})
+						window.clearInterval(timer);
+						timer=setInterval(function(){
+							//吃金币
+
+							for(var i=0;i<Mymap.arr1.length;i++){
+								//赛道一
+								if((player.dis1>=-187&&player.dis1<=-134)&&(Mymap.arr1[i].$left+Mymap.distan<=257&&Mymap.arr1[i].$left+Mymap.distan>=185)){
+									Mymap.arr1[i].$cv.hide();
+									Mymap.arr1.splice(i,1);
+									k++;
+									Mymap.$coin.html(k);
+								}
+							}
+							for(var i=0;i<Mymap.arr2.length;i++){
+								//赛道二
+								if((player.dis1>=-134&&player.dis1<=-64)&&(Mymap.arr2[i].$left+Mymap.distan<=257&&Mymap.arr2[i].$left+Mymap.distan>=185)){
+									Mymap.arr2[i].$cv.hide();
+									Mymap.arr2.splice(i,1);
+									k++;
+									Mymap.$coin.html(k);
+								}
+							}
+							for(var i=0;i<Mymap.arr3.length;i++){
+								//赛道三
+								if((player.dis1>=-64&&player.dis1<=4)&&(Mymap.arr3[i].$left+Mymap.distan<=257&&Mymap.arr3[i].$left+Mymap.distan>=185)){
+									Mymap.arr3[i].$cv.hide();
+									Mymap.arr3.splice(i,1);
+									k++;
+									Mymap.$coin.html(k);
+								}
+							}
+							for(var i=0;i<Mymap.arr4.length;i++){
+								//赛道四
+								if((player.dis1>=4&&player.dis1<=71)&&(Mymap.arr4[i].$left+Mymap.distan<=257&&Mymap.arr4[i].$left+Mymap.distan>=185)){
+									Mymap.arr4[i].$cv.hide();
+									Mymap.arr4.splice(i,1);
+									k++;
+									Mymap.$coin.html(k);
+								}
+							}
+
+
+
+
+
+							Mymap.move(nx/12);
+							player.move(nx/12,ny/12);
+							player1.move(-nx/12);
+							player2.move(-nx/12);
+
+
+
+							//上边界
+							if(player.dis1<=-187){
+								player.dis1=-187;
+							}
+							//下边界
+							if(player.dis1>=135){
+								player.dis1=135;
+							}
+							//终点
+							if(Mymap.distan<=-13000){
+								window.clearInterval(timer);
+								window.clearInterval(Mymap.timer);
+								Mymap.distan=-13000;
+								player.$wheel_left.removeClass("cls");
+								player.$wheel_right.removeClass("cls");
+								Mymap.$speed1.css({
+									'width':'0px'
+								})
+								if(localStorage.first==1){
+									alert("第一名");
+								}
+								else if(localStorage.second==1){
+									alert("第二名");
+								}
+								else{
+									alert("第三名");
+								}
+
+								localStorage.time=Mymap.$timer.children().eq(0).html();
+								localStorage.coin=k;
+								myf("result");
+							}
+						},10)
+						player.$wheel_left.addClass("cls");
+						player.$wheel_right.addClass("cls");
+					}
+					else{
+						window.clearInterval(timer);
+						player.$wheel_left.removeClass("cls");
+						player.$wheel_right.removeClass("cls");
+					}
+				})
+
+
+				//bot机器人
+				var timer1;
+				window.setTimeout(function(){
+					timer1=setInterval(function(){
+						//名次
+						if(player1.dis<137){
+							Mymap.$rank1.css({
+								'backgroundImage':"url('play/mc1.png')"
+							})
+							localStorage.first=1;//第一名
+							localStorage.second=0;
+							localStorage.third=0;
+						}
+						else if(player2.dis<137){
+							Mymap.$rank1.css({
+								'backgroundImage':"url('play/mc2.png')"
+							})
+							localStorage.first=0;//第二名
+							localStorage.second=1;
+							localStorage.third=0;
+						}
+						else{
+							Mymap.$rank1.css({
+								'backgroundImage':"url('play/mc3.png')"
+							})
+							localStorage.first=0;//第三名
+							localStorage.second=0;
+							localStorage.third=1;
+						}
+
+						if(player1_1.dis>13140){
+							player2.$wheel_left.removeClass("cls");
+							player2.$wheel_right.removeClass("cls");
+							window.clearInterval(timer1);
+							localStorage.time1=Mymap.$timer.children().eq(0).html();
+							timer1=setInterval(function(){
+								//名次
+								if(player1.dis<137){
+									Mymap.$rank1.css({
+										'backgroundImage':"url('play/mc1.png')"
+									})
+									localStorage.first=1;//第一名
+									localStorage.second=0;
+									localStorage.third=0;
+								}
+								else if(player2.dis<137){
+									Mymap.$rank1.css({
+										'backgroundImage':"url('play/mc2.png')"
+									})
+									localStorage.first=0;//第二名
+									localStorage.second=1;
+									localStorage.third=0;
+								}
+								else{
+									Mymap.$rank1.css({
+										'backgroundImage':"url('play/mc3.png')"
+									})
+									localStorage.first=0;//第三名
+									localStorage.second=0;
+									localStorage.third=1;
+								}
+
+								player2.move(6/5);
+								player2_1.move(6/5);
+								player2.$wheel_left.addClass("cls");
+								player2.$wheel_right.addClass("cls");
+
+								if(player2_1.dis>13180){
+									window.clearInterval(timer1);
+									localStorage.time2=Mymap.$timer.children().eq(0).html();
+								}
+							},1)
+						}
+
+						player1.move(4/3);
+						player2.move(6/5);
+						player1_1.move(4/3);
+						player2_1.move(6/5);
+
+						player1.$wheel_left.addClass("cls");
+						player1.$wheel_right.addClass("cls");
+						player2.$wheel_left.addClass("cls");
+						player2.$wheel_right.addClass("cls");
+						/*player3.$wheel_left.addClass("cls");
+						player3.$wheel_right.addClass("cls");*/
+					},1)
+				},3000)
+
+
+
+				//暂停
+				var pause=0;
+				Mymap.$pause.click(function(){
+					if(pause==0){
+						Mymap.$pause.css({
+							'backgroundImage':"url('play/pause2.png')"
+						})
+						Mymap.$speed1.css({
+							'width':'0px'
+						})
+						pause=1;
+						window.clearInterval(timer1);
+						window.clearInterval(timer);
+						window.clearInterval(Mymap.timer);
+					}
+					else{
+                        Mymap.$pause.css({
+							'backgroundImage':"url('play/pause.png')"
+						})
+						Mymap.$speed1.css({
+							'width':'0px'
+						})
+						pause=0;
+						Mymap.timer=window.setInterval(Mymap.time,10);
+						timer1=setInterval(function(){
+							//名次
+							if(player1.dis<137){
+								Mymap.$rank1.css({
+									'backgroundImage':"url('play/mc1.png')"
+								})
+								localStorage.first=1;//第一名
+								localStorage.second=0;
+								localStorage.third=0;
+							}
+							else if(player2.dis<137){
+								Mymap.$rank1.css({
+									'backgroundImage':"url('play/mc2.png')"
+								})
+								localStorage.first=0;//第二名
+								localStorage.second=1;
+								localStorage.third=0;
+							}
+							else{
+								Mymap.$rank1.css({
+									'backgroundImage':"url('play/mc3.png')"
+								})
+								localStorage.first=0;//第三名
+								localStorage.second=0;
+								localStorage.third=1;
+							}
+							if(player1_1.dis>13140){
+								player2.$wheel_left.removeClass("cls");
+								player2.$wheel_right.removeClass("cls");
+								window.clearInterval(timer1);
+								localStorage.time1=Mymap.$timer.children().eq(0).html();
+								timer1=setInterval(function(){
+									//名次
+									if(player1.dis<137){
+										Mymap.$rank1.css({
+											'backgroundImage':"url('play/mc1.png')"
+										})
+										localStorage.first=1;//第一名
+										localStorage.second=0;
+										localStorage.third=0;
+									}
+									else if(player2.dis<137){
+										Mymap.$rank1.css({
+											'backgroundImage':"url('play/mc2.png')"
+										})
+										localStorage.first=0;//第二名
+										localStorage.second=1;
+										localStorage.third=0;
+									}
+									else{
+										Mymap.$rank1.css({
+											'backgroundImage':"url('play/mc3.png')"
+										})
+										localStorage.first=0;//第三名
+										localStorage.second=0;
+										localStorage.third=1;
+									}
+
+									player2.move(6/5);
+									player2_1.move(6/5);
+									player2.$wheel_left.addClass("cls");
+									player2.$wheel_right.addClass("cls");
+
+									if(player2_1.dis>13180){
+										window.clearInterval(timer1);
+										localStorage.time2=Mymap.$timer.children().eq(0).html();
+									}
+								},1)
+							}
+							player1.move(4/3);
+							player2.move(6/5);
+							player1_1.move(4/3);
+							player2_1.move(6/5);
+							player1.$wheel_left.addClass("cls");
+							player1.$wheel_right.addClass("cls");
+							player2.$wheel_left.addClass("cls");
+							player2.$wheel_right.addClass("cls");
+						},1)
+					}
+				})
+				/*dir1.runScene(result.$mainBody);*/
+			})
+		</script>
+		<style type="text/css">
+			body{
+				padding: 0;
+				margin: 0;
+				overflow: hidden;
+			}
+			#actor{
+				position: absolute;
+				width: 200px;
+				height: 200px;
+				left: 100px;
+				top:100px;
+			}
+			input{
+				outline: none;
+			}
+		</style>
+	</head>
+	<body>
+		<audio style="display: none" src='map2.mp3' id='bgm' controls='controls' autoplay='autoplay' loop='loop'></audio>
+		<div id="bg" style="position: relative">
+			<div id="mydiv" style="height: 150px;width: 150px;position: fixed;bottom: 50px;left: 40px"></div>
+			<div id="actor"></div>
+			<div id="actor1"></div>
+			<div id="actor2"></div>
+			<div id="actor3" style="display: none"></div>
+			<div id="actor4" style="display: none"></div>
+		</div>
+	</body>
+</html>

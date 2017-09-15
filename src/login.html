@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>越野机车</title>
+    <script src="js/jquery-3.1.0.min.js"></script>
+    <script src="js/director.js"></script>
+    <script src="js/LoginScene.js"></script>
+    <script src="js/bgm.js"></script>
+    <script src="js/SignupScene.js"></script>
+    <script src="js/userdata.js"></script>
+    <script src="js/Loading.js"></script>
+    <script src="js/Menu.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/shop.js"></script>
+    <script src="js/Mission.js"></script>
+    <script src="js/MyGarage.js"></script>
+    <script>
+        $(function(){
+            //导演切换
+            function myf(swi){//login  home // trigger bind
+                if(swi=="login"){
+                    var signup1= new SignupScene(myf);
+                    dir1.runScene(signup1.$mainBody);
+                    var bgm1=new bgm($("body"));
+                }
+                else if(swi=="success"){
+                    var login1 = new LoginScene(myf);
+                    dir1.runScene(login1.$mainBody);
+                    var bgm2=new bgm($("body"));
+                }
+                else if(swi=="loading"){
+                    dir1.runScene(loading.$mainBody);
+                    var bgm2=new bgm($("body"));
+                }
+                else if(swi=="menu"){
+                    var menu= new Menu(myf);
+                    dir1.runScene(menu.$mainBody);
+                    var bgm2=new bgm($("body"));
+                }
+                else if(swi=="map"){
+                    var map= new Map(myf);
+                    dir1.runScene(map.$mainBody);
+                    var bgm2=new bgm($("body"));
+                }
+                else if(swi=="shop"){
+                    var shop= new Shop(myf);
+                    dir1.runScene(shop.$mainBody);
+                    var bgm2=new bgm($("body"));
+                }
+                else if(swi=="mission"){
+                    var mission= new Mission(myf);
+                    dir1.runScene(mission.$mainBody);
+                    var bgm2=new bgm($("body"));
+                }
+                else if(swi=="garage"){
+                    var garage= new MyGarage(myf);
+                    dir1.runScene(garage.$mainBody);
+                    var bgm2=new bgm($("body"));
+                }
+            }
+
+
+            var dir1= new director($("body"));
+            var login1 = new LoginScene(myf);
+            var signup1= new SignupScene(myf);
+            var loading= new Loading(myf);
+            var menu= new Menu(myf);
+            var map= new Map(myf);
+            var shop= new Shop(myf);
+            var mission= new Mission(myf);
+            var garage= new MyGarage(myf);
+            dir1.runScene(login1.$mainBody);
+            //返回主菜单
+            if(localStorage.menu==1){
+                var menu= new Menu(myf);
+                dir1.runScene(menu.$mainBody);
+                var bgm2=new bgm($("body"));
+                localStorage.menu=0;
+            }
+            var bgm1=new bgm($("body"));
+        })
+    </script>
+    <style type="text/css">
+        @-webkit-keyframes loading {
+            from{
+                width: 0;
+            }
+            to{
+                width: 1000px;
+            }
+        }
+        body,ul,li,p{
+            margin: 0;
+            padding: 0;
+        }
+        input{
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+</body>
+</html>

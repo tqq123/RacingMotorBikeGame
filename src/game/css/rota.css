@@ -1,0 +1,13 @@
+@-webkit-keyframes aa{
+	0%{
+		-webkit-transform: rotateZ(0deg);
+	}
+	100%{
+		-webkit-transform: rotateZ(360deg);
+	}
+}
+
+.cls{
+	animation: aa 0.5s linear infinite;
+}
+
