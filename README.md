@@ -26,6 +26,6 @@
 <img src="http://a1.qpic.cn/psb?/V13GqyBK3RKEMo/0cHlL3QVvhYd75qw*MDTveZVzm9WRTjOnK3P87Wocqw!/b/dNsAAAAAAAAA&bo=8wSAAgAAAAARAEI!&rf=viewer_4">
 10. 完成比赛之后就是结算页了
 <img src="http://a3.qpic.cn/psb?/V13GqyBK3RKEMo/rYR9oZXQryGm811PcX49YEafxBWYcA*CmYzsr9u5u24!/b/dD0BAAAAAAAA&bo=*QSAAgAAAAARAEw!&rf=viewer_4">
-### 是不是很因吹斯听，喜欢的话就给个star吧 ^_^
+## 是不是很因吹斯听，喜欢的话就给个star吧 ^_^
  
  
